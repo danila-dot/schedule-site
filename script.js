@@ -45,9 +45,8 @@ function getDayName() {
     return mskTime;
 }
 
-// Проверка, находится ли текущее московское время в интервале
 function isNowInTimeRange(startTime, endTime) {
-    // Текущее московское время
+    // Получаем текущее московское время
     const now = new Date();
     const formatter = new Intl.DateTimeFormat("ru-RU", {
         timeZone: "Europe/Moscow",
@@ -56,15 +55,20 @@ function isNowInTimeRange(startTime, endTime) {
     });
     const [hours, minutes] = formatter.format(now).split(":").map(Number);
 
-    const [startHours, startMinutes] = startTime.split(":").map(Number);
-    const [endHours, endMinutes] = endTime.split(":").map(Number);
-
+    // Переводим текущее время в минуты
     const current = hours * 60 + minutes;
+
+    // Переводим начало и конец интервала в минуты
+    const [startHours, startMinutes] = startTime.split(":").map(Number);
     const start = startHours * 60 + startMinutes;
+
+    const [endHours, endMinutes] = endTime.split(":").map(Number);
     const end = endHours * 60 + endMinutes;
 
+    // Проверяем, находится ли текущее время в интервале (включительно начало и исключая конец)
     return current >= start && current < end;
 }
+
 
 // Определение текущего руководителя
 function getCurrentLeader() {
