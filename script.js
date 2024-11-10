@@ -42,11 +42,15 @@ function getDayName() {
         timeZone: "Europe/Moscow",
         weekday: "long"
     }).format(now);
+
+    console.log("Сегодня:", mskTime); // Отладка: выводим текущий день недели
+
     return mskTime;
 }
 
+// Проверка, находится ли текущее московское время в интервале
 function isNowInTimeRange(startTime, endTime) {
-    // Получаем текущее московское время
+    // Текущее московское время
     const now = new Date();
     const formatter = new Intl.DateTimeFormat("ru-RU", {
         timeZone: "Europe/Moscow",
@@ -55,20 +59,23 @@ function isNowInTimeRange(startTime, endTime) {
     });
     const [hours, minutes] = formatter.format(now).split(":").map(Number);
 
-    // Переводим текущее время в минуты
-    const current = hours * 60 + minutes;
-
-    // Переводим начало и конец интервала в минуты
     const [startHours, startMinutes] = startTime.split(":").map(Number);
-    const start = startHours * 60 + startMinutes;
-
     const [endHours, endMinutes] = endTime.split(":").map(Number);
+
+    const current = hours * 60 + minutes;
+    const start = startHours * 60 + startMinutes;
     const end = endHours * 60 + endMinutes;
 
-    // Проверяем, находится ли текущее время в интервале (включительно начало и исключая конец)
-    return current >= start && current < end;
-}
+    console.log("Текущее время:", hours, "ч:", minutes, "мин");
+    console.log("Начало интервала:", startHours, "ч:", startMinutes, "мин");
+    console.log("Конец интервала:", endHours, "ч:", endMinutes, "мин");
 
+    // Проверка, находится ли текущее время в интервале (включительно начало и исключая конец)
+    const inTimeRange = current >= start && current < end;
+    console.log("Текущее время в интервале:", inTimeRange);
+
+    return inTimeRange;
+}
 
 // Определение текущего руководителя
 function getCurrentLeader() {
@@ -77,29 +84,26 @@ function getCurrentLeader() {
 
     for (const shift of shifts) {
         if (isNowInTimeRange(shift.start, shift.end)) {
+            console.log("Текущий руководитель:", shift.name); // Отладка: выводим текущего руководителя
             return shift.name;
         }
     }
+    console.log("Нет руководителя на смене"); // Отладка: если не нашли, выводим сообщение
     return "Нет руководителя на смене";
 }
 
 // Обновление страницы
 function updateLeader() {
     const leaderDiv = document.querySelector(".current-leader");
-    const currentLeader = getCurrentLeader();
-    leaderDiv.textContent = `Сейчас на смене: ${currentLeader}`;
-    console.log("Текущее время в Москве:", new Date().toLocaleString("ru-RU", { timeZone: "Europe/Moscow" }));
+    if (!leaderDiv) {
+        console.error("Элемент с классом .current-leader не найден!"); // Отладка: если элемент не найден
+        return;
+    }
 
-}
-function updateLeader() {
-    const leaderDiv = document.querySelector(".current-leader");
     const currentLeader = getCurrentLeader();
-    console.log("Сегодня:", getDayName());
-    console.log("Текущий руководитель:", currentLeader);
+    console.log("Текущий руководитель на смене:", currentLeader); // Отладка: выводим информацию на консоль
     leaderDiv.textContent = `Сейчас на смене: ${currentLeader}`;
 }
-console.log("Тест времени:", isNowInTimeRange("15:00", "22:00"));
 
 // Инициализация
 updateLeader();
-
