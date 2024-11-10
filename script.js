@@ -36,17 +36,23 @@ function getDayName() {
         "Воскресенье", "Понедельник", "Вторник",
         "Среда", "Четверг", "Пятница", "Суббота"
     ];
-    // Текущее московское время
+
     const now = new Date();
+    // Получаем текущий день недели с учётом МСК
     const mskTime = new Intl.DateTimeFormat("ru-RU", {
         timeZone: "Europe/Moscow",
         weekday: "long"
     }).format(now);
 
-    console.log("Сегодня:", mskTime); // Отладка: выводим текущий день недели
+    console.log("Сегодня (оригинальный формат):", mskTime); // Отладка: исходное значение
 
-    return mskTime;
+    // Приводим первый символ к верхнему регистру, остальные — к нижнему
+    const normalizedDay = mskTime.charAt(0).toUpperCase() + mskTime.slice(1).toLowerCase();
+    console.log("Сегодня (нормализованный формат):", normalizedDay);
+
+    return normalizedDay;
 }
+
 
 // Проверка, находится ли текущее московское время в интервале
 function isNowInTimeRange(startTime, endTime) {
