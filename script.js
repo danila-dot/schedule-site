@@ -79,18 +79,24 @@ function isNowInTimeRange(startTime, endTime) {
 
 // Определение текущего руководителя
 function getCurrentLeader() {
-    const today = getDayName();
-    const shifts = schedule[today] || [];
+    const today = getDayName(); // Определяем текущий день
+    const shifts = schedule[today] || []; // Получаем смены на сегодня
+
+    console.log("Расписание на сегодня:", shifts); // Отладка: проверяем расписание
 
     for (const shift of shifts) {
+        console.log(`Проверяем интервал: ${shift.start} - ${shift.end} для ${shift.name}`); // Отладка
+
         if (isNowInTimeRange(shift.start, shift.end)) {
-            console.log("Текущий руководитель:", shift.name); // Отладка: выводим текущего руководителя
+            console.log("Руководитель найден:", shift.name); // Отладка: нашли руководителя
             return shift.name;
         }
     }
-    console.log("Нет руководителя на смене"); // Отладка: если не нашли, выводим сообщение
+
+    console.log("Нет подходящих смен для текущего времени"); // Отладка: никто не найден
     return "Нет руководителя на смене";
 }
+
 
 // Обновление страницы
 function updateLeader() {
