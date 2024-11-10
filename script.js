@@ -82,20 +82,21 @@ function getCurrentLeader() {
     const today = getDayName(); // Определяем текущий день
     const shifts = schedule[today] || []; // Получаем смены на сегодня
 
-    console.log("Расписание на сегодня:", shifts); // Отладка: проверяем расписание
+    console.log("Расписание на сегодня:", shifts); // Проверяем, что расписание загружено
 
     for (const shift of shifts) {
-        console.log(`Проверяем интервал: ${shift.start} - ${shift.end} для ${shift.name}`); // Отладка
+        console.log(`Проверяем смену: ${shift.name}, с ${shift.start} до ${shift.end}`); // Проверяем каждую смену
 
         if (isNowInTimeRange(shift.start, shift.end)) {
-            console.log("Руководитель найден:", shift.name); // Отладка: нашли руководителя
+            console.log("Руководитель найден:", shift.name); // Если нашли руководителя
             return shift.name;
         }
     }
 
-    console.log("Нет подходящих смен для текущего времени"); // Отладка: никто не найден
+    console.log("Нет подходящих смен для текущего времени"); // Если никто не найден
     return "Нет руководителя на смене";
 }
+
 
 
 // Обновление страницы
