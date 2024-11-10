@@ -88,7 +88,17 @@ function updateLeader() {
     const leaderDiv = document.querySelector(".current-leader");
     const currentLeader = getCurrentLeader();
     leaderDiv.textContent = `Сейчас на смене: ${currentLeader}`;
+    console.log("Текущее время в Москве:", new Date().toLocaleString("ru-RU", { timeZone: "Europe/Moscow" }));
+
 }
+function updateLeader() {
+    const leaderDiv = document.querySelector(".current-leader");
+    const currentLeader = getCurrentLeader();
+    console.log("Сегодня:", getDayName());
+    console.log("Текущий руководитель:", currentLeader);
+    leaderDiv.textContent = `Сейчас на смене: ${currentLeader}`;
+}
+console.log("Тест времени:", isNowInTimeRange("15:00", "22:00"));
 
 // Инициализация
 updateLeader();
