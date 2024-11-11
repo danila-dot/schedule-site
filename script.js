@@ -30,30 +30,17 @@ const schedule = {
     ]
 };
 
-// Функция для получения нормализованного дня недели на русском языке
+// Функция для получения нормализованного дня недели
 function getDayName() {
-    const days = [
-        "Воскресенье", "Понедельник", "Вторник",
-        "Среда", "Четверг", "Пятница", "Суббота"
-    ];
-
     const now = new Date();
-    // Получаем текущий день недели с учётом МСК
     const mskTime = new Intl.DateTimeFormat("ru-RU", {
         timeZone: "Europe/Moscow",
         weekday: "long"
     }).format(now);
-
-    console.log("Сегодня (оригинальный формат):", mskTime); // Отладка: исходное значение
-
-    // Приводим первый символ к верхнему регистру, остальные — к нижнему
-    const normalizedDay = mskTime.charAt(0).toUpperCase() + mskTime.slice(1).toLowerCase();
-    console.log("Сегодня (нормализованный формат):", normalizedDay);
-
-    return normalizedDay;
+    return mskTime.charAt(0).toUpperCase() + mskTime.slice(1).toLowerCase();
 }
 
-// Функция для проверки, попадает ли текущее время в заданный интервал
+// Функция для проверки, входит ли текущее время в интервал
 function isNowInTimeRange(startTime, endTime) {
     const now = new Date();
     const formatter = new Intl.DateTimeFormat("ru-RU", {
@@ -70,40 +57,37 @@ function isNowInTimeRange(startTime, endTime) {
     const start = startHours * 60 + startMinutes;
     const end = endHours * 60 + endMinutes;
 
-    console.log(`Текущее время: ${hours}:${minutes}`);
-    console.log(`Начало смены: ${startHours}:${startMinutes}`);
-    console.log(`Конец смены: ${endHours}:${endMinutes}`);
-    console.log(`Сравнение: ${current} >= ${start} && ${current} < ${end}`);
-
-    const inTimeRange = current >= start && current < end;
-    console.log("Текущее время входит в интервал:", inTimeRange);
-
-    return inTimeRange;
+    return current >= start && current < end;
 }
 
-// Функция для получения текущего руководителя на смене
+// Функция для определения текущего руководителя
 function getCurrentLeader() {
-    const today = getDayName(); // Определяем текущий день
-    const shifts = schedule[today] || []; // Получаем смены на сегодня
+    const today = getDayName(); // Определяем текущий день недели
+    const shifts = schedule[today] || []; // Получаем расписание на сегодня
 
-    console.log("Расписание на сегодня:", shifts); // Отладка: проверяем расписание
+    console.log(`Сегодня: ${today}`);
+    console.log(`Расписание на сегодня:`, shifts);
 
     for (const shift of shifts) {
-        console.log(`Проверяем смену: ${shift.name}, с ${shift.start} до ${shift.end}`); // Проверяем каждую смену
-
+        console.log(`Проверяем смену: ${shift.name}, с ${shift.start} до ${shift.end}`);
         if (isNowInTimeRange(shift.start, shift.end)) {
-            console.log("Руководитель найден:", shift.name); // Если нашли руководителя
+            console.log(`Руководитель найден: ${shift.name}`);
             return shift.name;
         }
     }
 
-    console.log("Нет подходящих смен для текущего времени"); // Если никто не найден
+    console.log("Нет подходящих смен для текущего времени");
     return "Нет руководителя на смене";
 }
 
-// Выводим результат на страницу
-const currentLeader = getCurrentLeader();
-console.log("Текущий руководитель на смене:", currentLeader);
+// Функция для обновления информации о руководителе на странице
+function updateLeaderDisplay() {
+    const currentLeader = getCurrentLeader();
+    console.log("Текущий руководитель на смене:", currentLeader); // Лог для проверки
+    document.getElementById("leader").textContent = currentLeader;
+}
 
-// Выводим на страницу
-document.getElementById("leader").textContent = currentLeader;
+// Запускаем обновление только после полной загрузки DOM
+document.addEventListener("DOMContentLoaded", () => {
+    updateLeaderDisplay();
+});
