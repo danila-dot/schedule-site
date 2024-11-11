@@ -57,6 +57,13 @@ function isNowInTimeRange(startTime, endTime) {
     const start = startHours * 60 + startMinutes;
     const end = endHours * 60 + endMinutes;
 
+    console.log(
+        `Текущее время: ${hours}:${minutes}\n` +
+        `Начало смены: ${startHours}:${startMinutes}\n` +
+        `Конец смены: ${endHours}:${endMinutes}\n` +
+        `Сравнение: ${current} >= ${start} && ${current} < ${end}`
+    );
+
     return current >= start && current < end;
 }
 
@@ -84,7 +91,13 @@ function getCurrentLeader() {
 function updateLeaderDisplay() {
     const currentLeader = getCurrentLeader();
     console.log("Текущий руководитель на смене:", currentLeader); // Лог для проверки
-    document.getElementById("leader").textContent = currentLeader;
+
+    const leaderElement = document.getElementById("leader");
+    if (leaderElement) {
+        leaderElement.textContent = currentLeader;
+    } else {
+        console.error("Элемент с ID 'leader' не найден в DOM.");
+    }
 }
 
 // Запускаем обновление только после полной загрузки DOM
